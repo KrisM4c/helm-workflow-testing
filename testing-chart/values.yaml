@@ -1,0 +1,10 @@
+nginx:
+  
+
+global:
+#  image:
+#    tag: $GITHUB_RUN_ID
+  sharedContainerEnvVars:
+    - name: TEST_SHARED
+      value: "SHARED"
+  pullPolicy: Always

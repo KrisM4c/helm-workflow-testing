@@ -1,0 +1,6 @@
+nginx:
+
+global:
+  sharedContainerEnvVars:
+    - name: TEST_ENV
+      value: "PRODUCTION"

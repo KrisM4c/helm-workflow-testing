@@ -1,0 +1,40 @@
+name: Helm Deploy
+on:
+  workflow_call:
+    secrets:
+      kubeConfig:
+        description: The Environment secret for kubeconfig
+        required: true
+    inputs:
+      releaseEnv:
+        required: true
+        type: string
+        default: "staging"
+
+jobs:
+  helm-deploy:
+    runs-on: 'ubuntu-latest'
+    environment:
+      name: ${{ inputs.releaseEnv }}
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Headout Helm Action
+        uses: headout/helm@v1.7.4
+        
+        with:
+          release: 'soenergy-$GITHUB_REF_NAME'
+          namespace: '${{ inputs.releaseEnv }}'
+          chart: 'soenergy-charts'
+          token: '${{ github.token }}'
+          values: |
+            global:
+              image:
+                tag: $GITHUB_RUN_ID
+          value-files: >-
+            [
+              "./soenergy-charts/values.yaml", 
+              "./soenergy-charts/values-${{ inputs.releaseEnv }}.yaml"
+            ]
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'

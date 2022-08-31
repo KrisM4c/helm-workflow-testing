@@ -1,0 +1,33 @@
+name: Building and deploying the soenergy-charts helm chart.
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+      - develop
+
+jobs:
+  call-workflow-staging-deploy:
+    if: github.ref == 'refs/heads/develop'
+    needs:
+      - call-workflow-release
+    uses: ./.github/workflows/helm-deploy.yaml
+    with:
+      releaseEnv: staging
+    secrets: inherit
+
+  call-workflow-production-deploy:
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - call-workflow-release
+    uses: ./.github/workflows/helm-deploy.yaml
+    with:
+      releaseEnv: production
+    secrets: inherit
