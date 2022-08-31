@@ -1,4 +1,4 @@
-name: Building and deploying the soenergy-charts helm chart.
+name: Building and deploying the test helm charts.
 on:
   push:
     branches:
