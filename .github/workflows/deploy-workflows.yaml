@@ -16,8 +16,6 @@ on:
 jobs:
   call-workflow-staging-deploy:
     if: github.ref == 'refs/heads/develop'
-    needs:
-      - call-workflow-release
     uses: ./.github/workflows/helm-deploy.yaml
     with:
       releaseEnv: staging
@@ -26,7 +24,7 @@ jobs:
   call-workflow-production-deploy:
     if: github.ref == 'refs/heads/main'
     needs:
-      - call-workflow-release
+      - call-workflow-staging-deploy
     uses: ./.github/workflows/helm-deploy.yaml
     with:
       releaseEnv: production
