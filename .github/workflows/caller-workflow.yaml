@@ -32,4 +32,4 @@ jobs:
       releaseEnv: production
       chartName: testing-chart
     secrets:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+      KUBE_JSON: ${{ secrets.KUBE_JSON }}
