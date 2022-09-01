@@ -14,8 +14,19 @@ on:
       - develop
 
 jobs:
+  call-workflow-staging-infra-deploy:
+    if: github.ref == 'refs/heads/develop'
+    uses: ./.github/workflows/helm-deploy.yaml
+    with:
+      releaseEnv: staging
+      chartName: infra-chart
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
   call-workflow-staging-deploy:
     if: github.ref == 'refs/heads/develop'
+    needs:
+      - call-workflow-staging-infra-deploy
     uses: ./.github/workflows/helm-deploy.yaml
     with:
       releaseEnv: staging
@@ -23,9 +34,22 @@ jobs:
     secrets:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
+  call-workflow-production-infra-deploy:
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - call-workflow-staging-infra-deploy
+      - call-workflow-staging-deploy
+    uses: ./.github/workflows/helm-deploy.yaml
+    with:
+      releaseEnv: production
+      chartName: infra-chart
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
   call-workflow-production-deploy:
     if: github.ref == 'refs/heads/main'
     needs:
+      - call-workflow-production-infra-deploy
       - call-workflow-staging-deploy
     uses: ./.github/workflows/helm-deploy.yaml
     with:

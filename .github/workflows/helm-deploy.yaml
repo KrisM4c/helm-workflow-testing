@@ -47,8 +47,8 @@ jobs:
         --create-namespace \
         ${{ inputs.chartName }}-${{ inputs.releaseEnv }} \
         --version $GITHUB_RUN_ID \
-        -f ./testing-chart/values-${{ inputs.releaseEnv }}.yaml \
-        ./testing-chart
+        -f ./${{ inputs.chartName }}/values-${{ inputs.releaseEnv }}.yaml \
+        ./${{ inputs.chartName }}
   
   
   # helm-deploy:

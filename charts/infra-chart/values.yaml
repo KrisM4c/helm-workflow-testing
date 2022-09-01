@@ -59,6 +59,3 @@ global:
   image:
     pullPolicy: IfNotPresent
 #    tag: $GITHUB_RUN_ID
-  sharedContainerEnvVars:
-    - name: TEST_SHARED
-      value: "SHARED"
