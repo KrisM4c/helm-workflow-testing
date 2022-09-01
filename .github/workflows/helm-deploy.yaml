@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - name: Create kubeconfig file
+      - name: Debug steps for KUBECONFIG
         run: |
           echo ${{ secrets.KUBECONFIG }}
           cat ./kubeconfig.yml
