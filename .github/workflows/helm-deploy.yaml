@@ -51,6 +51,8 @@ jobs:
   #       ./charts/${{ inputs.chartName }}
 
   deployment:
+    name: Deploy with vimeda
+    environment: ${{ inputs.releaseEnv }}
     runs-on: 'ubuntu-latest'
     steps:
     - uses: actions/checkout@v1
@@ -63,9 +65,9 @@ jobs:
         chart: './charts/${{ inputs.chartName }}'
         token: '${{ github.token }}'
         value-files: >-
-        [
-          "./charts/${{ inputs.chartName }}/values.yaml", 
-          "./charts/${{ inputs.chartName }}/values-${{ inputs.releaseEnv }}.yaml"
-        ]
+          [
+            "./charts/${{ inputs.chartName }}/values.yaml", 
+            "./charts/${{ inputs.chartName }}/values-${{ inputs.releaseEnv }}.yaml"
+          ]
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
