@@ -21,7 +21,7 @@ jobs:
       releaseEnv: staging
       chartName: testing-chart
     secrets:
-      KUBE_JSON: ${{ secrets.KUBE_JSON }}
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
   call-workflow-production-deploy:
     if: github.ref == 'refs/heads/main'

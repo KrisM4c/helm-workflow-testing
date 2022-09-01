@@ -51,14 +51,15 @@ jobs:
   #       ./charts/${{ inputs.chartName }}
 
   deployment:
-    name: Deploy with vimeda
+    name: Deploy with ivido
     environment: ${{ inputs.releaseEnv }}
     runs-on: 'ubuntu-latest'
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: 'Deploy'
-      uses: 'vimeda/helm@v1.6.8'
+      uses: ivido/helm-deploy@v1.1.1
       with:
         release: '${{ inputs.chartName }}-${{ inputs.releaseEnv }}'
         namespace: '${{ inputs.releaseEnv }}'
@@ -71,4 +72,4 @@ jobs:
             "./charts/${{ inputs.chartName }}/values-${{ inputs.releaseEnv }}.yaml"
           ]
       env:
-        KUBECONFIG_FILE: '${{ secrets.KUBE_JSON }}'
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
