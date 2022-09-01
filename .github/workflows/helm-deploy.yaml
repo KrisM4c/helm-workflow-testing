@@ -17,8 +17,17 @@ jobs:
     environment:
       name: ${{ inputs.releaseEnv }}
     steps:
-      - uses: actions/checkout@v1
-
+      - uses: actions/checkout@v2
+      
+      # - name: Create kubeconfig file
+      #   run: |
+      #     mkdir ${HOME}/.kube
+      #     echo ${{ secrets.KUBECONFIG }} | base64 --decode > ${HOME}/.kube/config
+      #     cat ${HOME}/.kube/config
+      
+      # - name: Set current context
+      #   run: kubectl config use-context test-${{ inputs.releaseEnv }}
+      
       - name: Headout Helm Action
         uses: headout/helm@v1.7.4
         
@@ -27,6 +36,7 @@ jobs:
           namespace: '${{ inputs.releaseEnv }}'
           chart: 'testing-chart'
           token: '${{ github.token }}'
+          helm: helm3
           values: |
             global:
               image:
@@ -36,5 +46,3 @@ jobs:
               "./testing-chart/values.yaml", 
               "./testing-chart/values-${{ inputs.releaseEnv }}.yaml"
             ]
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
