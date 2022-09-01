@@ -14,6 +14,12 @@ on:
       - develop
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: debug echo secret
+        run: echo ${{ secrets.KUBECONFIG }}
+
   call-workflow-staging-deploy:
     if: github.ref == 'refs/heads/develop'
     uses: ./.github/workflows/helm-deploy.yaml

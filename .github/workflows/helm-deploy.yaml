@@ -21,14 +21,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    
     - name: Create kubeconfig file
       run: |
         mkdir ${HOME}/.kube
         echo ${{ secrets.KUBECONFIG }}
         echo ${{ secrets.KUBECONFIG }} | base64 --decode > ${HOME}/.kube/config
         cat ${HOME}/.kube/config
+    
     - name: Use context
       run: kubectl config use-context test-${{ inputs.releaseEnv }}
+    
     - name: Package installs
       run: |
         apt update && apt upgrade -y
@@ -36,6 +39,7 @@ jobs:
         curl -sL "https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz" | tar xvz && mv linux-amd64/helm /usr/bin/helm
         rm -rf linux-amd64
         chmod +x /usr/bin/helm
+    
     - name: Deploy release
       run: |
         helm upgrade --install --wait \
