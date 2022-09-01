@@ -10,40 +10,75 @@ on:
         required: true
         type: string
         default: "staging"
+      chartName:
+        required: true
+        type: string
+        default: "testing-chart"
 
 jobs:
-  helm-deploy:
-    runs-on: 'ubuntu-latest'
-    environment:
-      name: ${{ inputs.releaseEnv }}
+  deploy-helm:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Create kubeconfig file
+      run: |
+        mkdir ${HOME}/.kube
+        echo ${{ secrets.KUBECONFIG }} | base64 --decode > ${HOME}/.kube/config
+        cat ${HOME}/.kube/config
+    - name: Use context
+      run: kubectl config use-context test-${{ inputs.releaseEnv }}
+    - name: Package installs
+      run: |
+        apt update && apt upgrade -y
+        apt install curl ca-certificates sed -y
+        curl -sL "https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz" | tar xvz && mv linux-amd64/helm /usr/bin/helm
+        rm -rf linux-amd64
+        chmod +x /usr/bin/helm
+    - name: Deploy release
+      run: |
+        helm upgrade --install --wait \
+        --namespace=${{ inputs.releaseEnv }} \
+        --create-namespace \
+        ${{ inputs.chartName }}-${{ inputs.releaseEnv }} \
+        --version $GITHUB_RUN_ID \
+        -f values-${{ inputs.releaseEnv }}.yaml \
+        ./testing-chart
+  
+  
+  # helm-deploy:
+  #   runs-on: 'ubuntu-latest'
+  #   environment:
+  #     name: ${{ inputs.releaseEnv }}
+  #   steps:
+  #     - uses: actions/checkout@v2
       
-      - name: Debug steps for KUBECONFIG
-        run: |
-          echo ${{ secrets.KUBECONFIG }}
-          cat ./kubeconfig.yml
+  #     - name: Set current context
+  #       run: kubectl config use-context test-${{ inputs.releaseEnv }}
       
-      # - name: Set current context
-      #   run: kubectl config use-context test-${{ inputs.releaseEnv }}
-      
-      - name: Headout Helm Action
-        uses: headout/helm@v1.7.4
+
+
+
+
+
+  #     - name: Headout Helm Action
+  #       uses: headout/helm@v1.7.4
         
-        with:
-          release: 'test-$GITHUB_REF_NAME'
-          namespace: '${{ inputs.releaseEnv }}'
-          chart: 'testing-chart'
-          token: '${{ github.token }}'
-          helm: helm3
-          values: |
-            global:
-              image:
-                tag: $GITHUB_RUN_ID
-          value-files: >-
-            [
-              "./testing-chart/values.yaml", 
-              "./testing-chart/values-${{ inputs.releaseEnv }}.yaml"
-            ]
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+  #       with:
+  #         release: 'test-$GITHUB_REF_NAME'
+  #         namespace: '${{ inputs.releaseEnv }}'
+  #         chart: 'testing-chart'
+  #         token: '${{ github.token }}'
+  #         helm: helm3
+  #         values: |
+  #           global:
+  #             image:
+  #               tag: $GITHUB_RUN_ID
+  #         value-files: >-
+  #           [
+  #             "./testing-chart/values.yaml", 
+  #             "./testing-chart/values-${{ inputs.releaseEnv }}.yaml"
+  #           ]
+  #       env:
+  #         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'

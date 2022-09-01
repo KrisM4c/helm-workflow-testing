@@ -19,6 +19,7 @@ jobs:
     uses: ./.github/workflows/helm-deploy.yaml
     with:
       releaseEnv: staging
+      chartName: testing-chart
     secrets: inherit
 
   call-workflow-production-deploy:
@@ -28,4 +29,5 @@ jobs:
     uses: ./.github/workflows/helm-deploy.yaml
     with:
       releaseEnv: production
+      chartName: testing-chart
     secrets: inherit
