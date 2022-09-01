@@ -1,20 +1,21 @@
+{{- $fullName := include "chart.fullname" . -}}
 {{- if .Values.ingressRoute.enabled -}}
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "chart.fullname" . }}-secured
+  name: {{ $fullName }}-secured
 spec:
   chain:
     middlewares:
-    - name: {{ include "chart.fullname" . }}-hsts-headers
+    - name: {{ $fullName }}-hsts-headers
     {{- if .Values.ingressRoute.ipAllowList }}
-    - name: {{ include "chart.fullname" . }}-known-ips
+    - name: {{ $fullName }}-known-ips
     {{- end }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "chart.fullname" . }}-https-only
+  name: {{ $fullName }}-https-only
 spec:
   redirectScheme:
     scheme: https
@@ -23,7 +24,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "chart.fullname" . }}-hsts-headers
+  name: {{ $fullName }}-hsts-headers
 spec:
   headers:
     forceSTSHeader: true
@@ -35,7 +36,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "chart.fullname" . }}-known-ips
+  name: {{ $fullName }}-known-ips
 spec:
   ipWhiteList:
     sourceRange:

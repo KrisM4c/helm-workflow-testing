@@ -1,7 +1,8 @@
+{{- $fullName := include "chart.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "chart.fullname" . }}
+  name: {{ $fullName }}
   labels:
     {{- include "chart.labels" . | nindent 4 }}
 spec:
