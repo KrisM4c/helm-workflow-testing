@@ -15,74 +15,57 @@ on:
         default: "testing-chart"
 
 jobs:
-  deploy-helm:
-    name: Deploy to Kubernetes
-    environment: ${{ inputs.releaseEnv }}
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    
-    - name: Create kubeconfig file
-      run: |
-        mkdir ${HOME}/.kube
-        echo ${{ secrets.KUBECONFIG }} | base64 --decode > ${HOME}/.kube/config
-        cat ${HOME}/.kube/config
-    
-    - name: Use context
-      run: kubectl config use-context test-${{ inputs.releaseEnv }}
-    
-    - name: Package installs
-      run: |
-        sudo apt update
-        sudo apt install curl ca-certificates sed -y
-        curl -sL "https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz" | tar xvz && sudo mv linux-amd64/helm /usr/bin/helm
-        sudo rm -rf linux-amd64
-        sudo chmod +x /usr/bin/helm
-    
-    - name: Deploy release
-      run: |
-        helm upgrade --install --wait \
-        --namespace=${{ inputs.releaseEnv }} \
-        --create-namespace \
-        ${{ inputs.chartName }}-${{ inputs.releaseEnv }} \
-        --version $GITHUB_RUN_ID \
-        -f ./charts/${{ inputs.chartName }}/values-${{ inputs.releaseEnv }}.yaml \
-        ./charts/${{ inputs.chartName }}
-  
-  
-  # helm-deploy:
-  #   runs-on: 'ubuntu-latest'
-  #   environment:
-  #     name: ${{ inputs.releaseEnv }}
+  # deploy-helm:
+  #   name: Deploy to Kubernetes
+  #   environment: ${{ inputs.releaseEnv }}
+  #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v2
-      
-  #     - name: Set current context
-  #       run: kubectl config use-context test-${{ inputs.releaseEnv }}
-      
+  #   - name: Checkout code
+  #     uses: actions/checkout@v2
+    
+  #   - name: Create kubeconfig file
+  #     run: |
+  #       mkdir ${HOME}/.kube
+  #       echo ${{ secrets.KUBECONFIG }} | base64 --decode > ${HOME}/.kube/config
+  #       cat ${HOME}/.kube/config
+    
+  #   - name: Use context
+  #     run: kubectl config use-context test-${{ inputs.releaseEnv }}
+    
+  #   - name: Package installs
+  #     run: |
+  #       sudo apt update
+  #       sudo apt install curl ca-certificates sed -y
+  #       curl -sL "https://get.helm.sh/helm-v3.9.4-linux-amd64.tar.gz" | tar xvz && sudo mv linux-amd64/helm /usr/bin/helm
+  #       sudo rm -rf linux-amd64
+  #       sudo chmod +x /usr/bin/helm
+    
+  #   - name: Deploy release
+  #     run: |
+  #       helm upgrade --install --wait \
+  #       --namespace=${{ inputs.releaseEnv }} \
+  #       --create-namespace \
+  #       ${{ inputs.chartName }}-${{ inputs.releaseEnv }} \
+  #       --version $GITHUB_RUN_ID \
+  #       -f ./charts/${{ inputs.chartName }}/values-${{ inputs.releaseEnv }}.yaml \
+  #       ./charts/${{ inputs.chartName }}
 
+  deployment:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - uses: actions/checkout@v1
 
-
-
-
-  #     - name: Headout Helm Action
-  #       uses: headout/helm@v1.7.4
-        
-  #       with:
-  #         release: 'test-$GITHUB_REF_NAME'
-  #         namespace: '${{ inputs.releaseEnv }}'
-  #         chart: 'testing-chart'
-  #         token: '${{ github.token }}'
-  #         helm: helm3
-  #         values: |
-  #           global:
-  #             image:
-  #               tag: $GITHUB_RUN_ID
-  #         value-files: >-
-  #           [
-  #             "./testing-chart/values.yaml", 
-  #             "./testing-chart/values-${{ inputs.releaseEnv }}.yaml"
-  #           ]
-  #       env:
-  #         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+    - name: 'Deploy'
+      uses: 'vimeda/helm@v1.6.8'
+      with:
+        release: '${{ inputs.chartName }}-${{ inputs.releaseEnv }}'
+        namespace: '${{ inputs.releaseEnv }}'
+        chart: './charts/${{ inputs.chartName }}'
+        token: '${{ github.token }}'
+        value-files: >-
+        [
+          "./charts/${{ inputs.chartName }}/values.yaml", 
+          "./charts/${{ inputs.chartName }}/values-${{ inputs.releaseEnv }}.yaml"
+        ]
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
