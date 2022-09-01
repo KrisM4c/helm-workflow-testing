@@ -22,7 +22,7 @@ jobs:
       - name: Create kubeconfig file
         run: |
           echo ${{ secrets.KUBECONFIG }}
-          echo ./kubeconfig.yml
+          cat ./kubeconfig.yml
       
       # - name: Set current context
       #   run: kubectl config use-context test-${{ inputs.releaseEnv }}
