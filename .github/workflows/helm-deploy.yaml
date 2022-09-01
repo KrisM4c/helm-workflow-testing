@@ -46,3 +46,5 @@ jobs:
               "./testing-chart/values.yaml", 
               "./testing-chart/values-${{ inputs.releaseEnv }}.yaml"
             ]
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
