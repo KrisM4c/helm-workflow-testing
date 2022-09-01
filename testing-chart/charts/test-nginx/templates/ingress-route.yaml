@@ -1,6 +1,6 @@
 {{- $ingressRoute := .Values.ingressRoute -}}
 {{- if $ingressRoute.enabled -}}
-{{- $fullName := include "test-nginx.fullname" . -}}
+{{- $fullName := include "chart.fullname" . -}}
 {{- $release := .Release -}}
 {{- range $ingressRoute.hosts}}
 {{- $host := .host -}}

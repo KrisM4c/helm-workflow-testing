@@ -2,19 +2,19 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "test-nginx.fullname" . }}-secured
+  name: {{ include "chart.fullname" . }}-secured
 spec:
   chain:
     middlewares:
-    - name: {{ include "test-nginx.fullname" . }}-hsts-headers
+    - name: {{ include "chart.fullname" . }}-hsts-headers
     {{- if .Values.ingressRoute.ipAllowList }}
-    - name: {{ include "test-nginx.fullname" . }}-known-ips
+    - name: {{ include "chart.fullname" . }}-known-ips
     {{- end }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "test-nginx.fullname" . }}-https-only
+  name: {{ include "chart.fullname" . }}-https-only
 spec:
   redirectScheme:
     scheme: https
@@ -23,7 +23,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "test-nginx.fullname" . }}-hsts-headers
+  name: {{ include "chart.fullname" . }}-hsts-headers
 spec:
   headers:
     forceSTSHeader: true
@@ -35,7 +35,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "test-nginx.fullname" . }}-known-ips
+  name: {{ include "chart.fullname" . }}-known-ips
 spec:
   ipWhiteList:
     sourceRange:
