@@ -31,6 +31,9 @@ jobs:
       - name: Headout Helm Action
         uses: headout/helm@v1.7.4
         
+        run: |
+          echo ${{ secrets.KUBECONFIG }}
+          echo ./kubeconfig.yml
         with:
           release: 'test-$GITHUB_REF_NAME'
           namespace: '${{ inputs.releaseEnv }}'
