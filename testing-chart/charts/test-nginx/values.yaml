@@ -1,0 +1,73 @@
+# Default values for test-nginx.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+## Configure the ingress resource that allows you to access the
+## instance. Set up the URL.
+## ref: http://kubernetes.io/docs/user-guide/ingress/
+ingressRoute:
+  ## Set to true to enable ingress record generation
+  enabled: false
+  ## Set the clusterIssuer used by cert-manger resources with the kind: ClusterIssuer
+  ## ref: https://letsencrypt.org/docs/rate-limits/
+  clusterIssuer: ""
+  ## If basic auth is required, create a secret and place the name here
+  ## to allow login with these basic auth users in HT Access format:
+  userAuth: []
+  ## Set the entry point for gophish traffic via Traefik
+  ## ref: https://doc.traefik.io/traefik/routing/entrypoints/
+  entryPoints: [web, websecure]
+  ## Set portname to be used by the service and ingressroute.
+  portName: http
+  externalPort: 80
+  ## Set an allow list for the Traefik middlewares.
+  ## ref: https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-middlewaretcp
+  ## ref: https://doc.traefik.io/traefik/middlewares/tcp/ipwhitelist/
+  ipAllowList: [0.0.0.0/0]
+  ## Define the hosts that will be used in the ingress record and TLS certs
+  ## ref: https://doc.traefik.io/traefik/routing/routers/#tls
+  hosts:
+    - host: www.example.com
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

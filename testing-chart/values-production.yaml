@@ -1,4 +1,18 @@
-nginx:
+test-nginx:
+  replicaCount: 3
+  fullnameOverride: "nginx-production"
+  ingressRoute:
+    enabled: true
+    clusterIssuer: "letsencrypt-production"
+    entryPoints: [web, websecure]
+    portName: http
+    externalPort: 80
+    ipAllowList: [195.166.150.171/32]
+    hosts:
+      - host: nginx.dreadnaut.io
+
+clusterissuer:
+  issuerName: letsencrypt-production
 
 global:
   sharedContainerEnvVars:

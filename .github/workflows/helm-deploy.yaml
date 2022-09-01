@@ -23,9 +23,9 @@ jobs:
         uses: headout/helm@v1.7.4
         
         with:
-          release: 'soenergy-$GITHUB_REF_NAME'
+          release: 'test-$GITHUB_REF_NAME'
           namespace: '${{ inputs.releaseEnv }}'
-          chart: 'soenergy-charts'
+          chart: 'testing-chart'
           token: '${{ github.token }}'
           values: |
             global:
@@ -33,8 +33,8 @@ jobs:
                 tag: $GITHUB_RUN_ID
           value-files: >-
             [
-              "./soenergy-charts/values.yaml", 
-              "./soenergy-charts/values-${{ inputs.releaseEnv }}.yaml"
+              "./testing-chart/values.yaml", 
+              "./testing-chart/values-${{ inputs.releaseEnv }}.yaml"
             ]
         env:
           KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'

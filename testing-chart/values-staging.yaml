@@ -1,4 +1,18 @@
-nginx:
+test-nginx:
+  replicaCount: 1
+  fullnameOverride: "nginx-staging"
+  ingressRoute:
+    enabled: true
+    clusterIssuer: "letsencrypt-staging"
+    entryPoints: [web, websecure]
+    portName: http
+    externalPort: 80
+    ipAllowList: [195.166.150.171/32]
+    hosts:
+      - host: staging.nginx.dreadnaut.io
+
+clusterissuer:
+  issuerName: letsencrypt-staging
 
 global:
   sharedContainerEnvVars:
