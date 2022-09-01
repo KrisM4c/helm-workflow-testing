@@ -2,8 +2,8 @@ name: Helm Deploy
 on:
   workflow_call:
     secrets:
-      kubeConfig:
-        description: The Environment secret for kubeconfig
+      KUBECONFIG:
+        description: The Environment secret for KUBECONFIG
         required: true
     inputs:
       releaseEnv:
