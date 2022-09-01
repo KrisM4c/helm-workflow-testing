@@ -51,14 +51,14 @@ jobs:
   #       ./charts/${{ inputs.chartName }}
 
   deployment:
-    name: Deploy with vimeda
+    name: Deploy with DeliveryBot
     environment: ${{ inputs.releaseEnv }}
     runs-on: 'ubuntu-latest'
     steps:
     - uses: actions/checkout@v1
 
     - name: 'Deploy'
-      uses: 'deliverbot/helm@v1'
+      uses: 'deliverybot/helm@v1'
       with:
         release: '${{ inputs.chartName }}-${{ inputs.releaseEnv }}'
         namespace: '${{ inputs.releaseEnv }}'
