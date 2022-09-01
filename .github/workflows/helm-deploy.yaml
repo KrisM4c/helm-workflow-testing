@@ -1,6 +1,9 @@
 name: Helm Deploy
 on:
   workflow_call:
+    secrets:
+      KUBECONFIG:
+        required: true
     inputs:
       releaseEnv:
         required: true
