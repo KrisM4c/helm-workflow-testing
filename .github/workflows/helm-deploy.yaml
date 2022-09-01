@@ -34,7 +34,7 @@ jobs:
     
     - name: Package installs
       run: |
-        sudo apt update && sudo apt upgrade -y
+        sudo apt update
         sudo apt install curl ca-certificates sed -y
         curl -sL "https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz" | tar xvz && sudo mv linux-amd64/helm /usr/bin/helm
         sudo rm -rf linux-amd64
