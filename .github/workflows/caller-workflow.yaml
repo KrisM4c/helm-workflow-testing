@@ -20,7 +20,8 @@ jobs:
     with:
       releaseEnv: staging
       chartName: testing-chart
-    secrets: inherit
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
   call-workflow-production-deploy:
     if: github.ref == 'refs/heads/main'
@@ -30,4 +31,5 @@ jobs:
     with:
       releaseEnv: production
       chartName: testing-chart
-    secrets: inherit
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
