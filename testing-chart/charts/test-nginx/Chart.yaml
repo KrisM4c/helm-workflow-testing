@@ -1,6 +1,6 @@
 apiVersion: v2
-name: testing-parent-chart
-description: The main Helm chart for Kubernetes for Testing
+name: test-nginx
+description: A Helm chart for testing github action - Nginx
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -21,10 +21,4 @@ version: 0.0.1
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "0.0.1"
-
-dependencies:
-  - name: traefik
-  - name: cert-manager
-  - name: clusterissuer
-  - name: test-nginx
+appVersion: "1.16.0"

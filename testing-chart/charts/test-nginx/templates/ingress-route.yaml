@@ -1,0 +1,36 @@
+{{- $ingressRoute := .Values.ingressRoute -}}
+{{- if $ingressRoute.enabled -}}
+{{- $fullName := include "test-nginx.fullname" . -}}
+{{- $release := .Release -}}
+{{- range $ingressRoute.hosts}}
+{{- $host := .host -}}
+{{- range $ingressRoute.entryPoints}}
+{{- $entryPoint := . -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ $host | replace "." "-" }}-ingressroute-{{ $entryPoint }}
+spec:
+  entryPoints:
+    - {{ $entryPoint }}
+  routes:
+  - kind: Rule
+    match: Host(`{{ $host }}`)
+    services:
+      - kind: Service
+        name: {{ $fullName }}
+        port: http
+    middlewares:
+      {{- if eq $entryPoint "web" }}
+      - name: {{ $fullName }}-https-only
+      {{- else if eq $entryPoint "websecure" }}
+      - name: {{ $fullName }}-secured
+      {{- end }}
+  {{- if eq $entryPoint "websecure" }}
+  tls:
+    secretName: {{ $host | replace "." "-" }}-cert
+  {{- end }}
+---
+{{- end }}
+{{- end }}
+{{- end }}

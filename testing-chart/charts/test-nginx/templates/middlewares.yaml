@@ -1,0 +1,46 @@
+{{- if .Values.ingressRoute.enabled -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "test-nginx.fullname" . }}-secured
+spec:
+  chain:
+    middlewares:
+    - name: {{ include "test-nginx.fullname" . }}-hsts-headers
+    {{- if .Values.ingressRoute.ipAllowList }}
+    - name: {{ include "test-nginx.fullname" . }}-known-ips
+    {{- end }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "test-nginx.fullname" . }}-https-only
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "test-nginx.fullname" . }}-hsts-headers
+spec:
+  headers:
+    forceSTSHeader: true
+    stsIncludeSubdomains: false
+    stsPreload: false
+    stsSeconds: 315360000
+---
+{{- if .Values.ingressRoute.ipAllowList }}
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "test-nginx.fullname" . }}-known-ips
+spec:
+  ipWhiteList:
+    sourceRange:
+    {{- range .Values.ingressRoute.ipAllowList }}
+    - {{ . }}
+    {{- end }}
+{{- end }}
+{{- end }}
