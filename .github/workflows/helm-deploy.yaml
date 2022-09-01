@@ -2,7 +2,7 @@ name: Helm Deploy
 on:
   workflow_call:
     secrets:
-      KUBECONFIG:
+      KUBE_JSON:
         required: true
     inputs:
       releaseEnv:
@@ -72,4 +72,4 @@ jobs:
             "./charts/${{ inputs.chartName }}/values-${{ inputs.releaseEnv }}.yaml"
           ]
       env:
-        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+        KUBECONFIG_FILE: '${{ secrets.KUBE_JSON }}'
