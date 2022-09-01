@@ -17,6 +17,7 @@ on:
 jobs:
   deploy-helm:
     name: Deploy to Kubernetes
+    environment: ${{ inputs.releaseEnv }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code

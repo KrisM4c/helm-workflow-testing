@@ -16,6 +16,7 @@ on:
 jobs:
   debug:
     runs-on: ubuntu-latest
+    environment: staging
     steps:
       - name: debug echo secret
         run: echo ${{ secrets.KUBECONFIG }}
