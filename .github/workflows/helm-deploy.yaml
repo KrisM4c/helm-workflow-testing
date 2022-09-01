@@ -64,8 +64,8 @@ jobs:
         release: '${{ inputs.chartName }}-${{ inputs.releaseEnv }}'
         namespace: '${{ inputs.releaseEnv }}'
         chart: './charts/${{ inputs.chartName }}'
-        helm: helm3
-        token: '${{ github.token }}'
+        # helm: helm3
+        # token: '${{ github.token }}'
         value-files: >-
           [
             "./charts/${{ inputs.chartName }}/values.yaml", 
